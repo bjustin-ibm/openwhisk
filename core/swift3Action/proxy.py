@@ -117,6 +117,12 @@ def run():
     if e is not None:
         sys.stderr.write(e)
 
+    # manually flush stderr and stdout to ensure all printed info appears
+    # in the activation logs
+    sys.stdout.write("XXX_THE_END_OF_A_WHISK_ACTIVATION_XXX\n")
+    sys.stderr.flush()
+    sys.stdout.flush()
+
     try:
         json_output = json.loads(last_line)
         if isinstance(json_output, dict):
