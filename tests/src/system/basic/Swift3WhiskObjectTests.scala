@@ -62,6 +62,11 @@ class Swift3WhiskObjectTests
 
                     // should have somewhere in the "result" field the phrase "It is now" printed from the invoked date action
                     activation.fields("response").asJsObject.fields("result").toString should include("It is now")
+
+                    val logs = activation.fields("logs").toString
+
+                    logs should include("It is now")
+                    logs should not include ("Could not parse date of of the response.")
             }
     }
 
@@ -95,6 +100,8 @@ class Swift3WhiskObjectTests
                     withClue(s"trigger activations for $triggerName:") {
                         triggerActivations.length should be(1)
                     }
+
+                    activation.fields("logs").toString should include(s"Trigger Name: $triggerName")
             }
     }
 }
