@@ -13,7 +13,6 @@ function main(params) {
   var username = params.username;
   var repository = params.repository;
   var accessToken = params.accessToken;
-  var endpoint = params.endpoint || 'openwhisk.ng.bluemix.net';
 
   var organization,
     repository;
@@ -32,7 +31,7 @@ function main(params) {
   var triggerName = params.triggerName.split("/");
 
     // URL of the whisk system. The calls of github will go here.
-  var whiskCallbackUrl = 'https://' + whisk.getAuthKey() + "@" + endpoint + '/api/v1/namespaces/' + encodeURIComponent(triggerName[1]) + '/triggers/' + encodeURIComponent(triggerName[2]);
+  var whiskCallbackUrl = 'https://' + whisk.getAuthKey() + "@" + params.endpoint + '/api/v1/namespaces/' + encodeURIComponent(triggerName[1]) + '/triggers/' + encodeURIComponent(triggerName[2]);
 
     // The URL to create the webhook on Github
   var registrationEndpoint = 'https://api.github.com/repos/' + (organization ? organization : username) + '/' + repository + '/hooks';
