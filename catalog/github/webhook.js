@@ -13,6 +13,7 @@ function main(params) {
   var username = params.username;
   var repository = params.repository;
   var accessToken = params.accessToken;
+  var endpoint = params.endpoint || 'openwhisk.ng.bluemix.net';
 
   var organization,
     repository;
@@ -27,7 +28,6 @@ function main(params) {
     }
   }
 
-  var endpoint = 'openwhisk.ng.bluemix.net';
   var lifecycleEvent = params.lifecycleEvent;
   var triggerName = params.triggerName.split("/");
 
@@ -87,6 +87,66 @@ function main(params) {
       }
     });
 
+    return whisk.async();
+  } else if(lifecycleEvent === 'DELETE') {
+    //list all the existing webhooks first.
+    var options = {
+        method: 'GET',
+        url: registrationEndpoint,
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authorizationHeader,
+            'User-Agent', 'whisk'
+        }
+    }
+
+    request(options, function(error, response, body){
+      if (error){
+        whisk.error({
+          response: response,
+          error:error,
+          body:body
+        });
+      } else {
+        for(i=0; i<body.length: i++){
+            var urlpath = encodeURIComponent(body[i].config.url);
+            var pathname = url.parse(urlpath).pathname;
+            //if the url contains the triggerName[1], then delete the webhook
+            //so this delete all the trigger start with triggerName[1] such as
+            // trigger1, trigger2.
+            if (pathname.search(encodeURIComponent(triggerName[1])) != -1) {
+                var options = {
+                    method: 'DELETE',
+                    url: urlpath,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': authorizationHeader,
+                        'User-Agent': 'whisk'
+                    }
+                }
+
+                request(options, function(error, response, body) {
+                    if (error) {
+                        whisk.error({
+                          response: response,
+                          error:error,
+                          body:body
+                        });
+                    } else {
+                        console.log("Status code: " + response.statusCode);
+                        if(response.statusCode >= 400) {
+                            console.log("Response from Github: " + body);
+                            whisk.error({
+                                statusCode: response.statusCode,
+                                response: body
+                            });
+                        }
+                    }
+                });
+            }
+        }
+      }
+    });
     return whisk.async();
   }
 

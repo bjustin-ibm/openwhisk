@@ -20,7 +20,7 @@ install "$CATALOG_HOME/github/webhook.js" \
     github/webhook \
     -a feed true \
     -a description 'Creates a webhook on github to be notified on selected changes' \
-    -a parameters '[ {"name":"username", "required":true, "bindTime":true}, {"name":"repository", "required":true, "bindTime":true}, {"name":"accessToken", "required":true, "bindTime":true},{"name":"events", "required":true} ]' \
+    -a parameters '[ {"name":"username", "required":true, "bindTime":true}, {"name":"repository", "required":true, "bindTime":true}, {"name":"accessToken", "required":true, "bindTime":true}, {"name":"endpoint", "required":false, "bindTime:true}, {"name":"events", "required":true} ]' \
     -a sampleInput '{"username":"whisk", "repository":"WhiskRepository", "accessToken":"123ABCXYZ", "events": "push,commit,delete"}'
 
 waitForAll
