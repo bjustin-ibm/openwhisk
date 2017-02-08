@@ -2,7 +2,6 @@ function eat(memoryMB) {
   var bytes = 1*1024*1024*memoryMB;
   var buffer = new Buffer.alloc(bytes, 'a');
   buffer = null;
-  global.gc();
   console.log('done.');
 }
 
