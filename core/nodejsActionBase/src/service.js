@@ -111,6 +111,9 @@ function NodeActionService(config, logger) {
             return doRun(req).then(function (result) {
                 setStatus(Status.ready);
 
+                // queue up GC to run soon after the request is complete
+                setTimeout(global.gc, 500);
+
                 if (typeof result !== "object") {
                     console.error('Result must be of type object but has type "' + typeof result + '":', result);
                     return errorMessage(502, "The action did not return a dictionary.");
